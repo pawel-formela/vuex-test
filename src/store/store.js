@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
         counter: 0,
-        dog: 22
+        value: 0
     },
     getters: {
         doubleCounter: state => {
@@ -14,34 +14,43 @@ export const store = new Vuex.Store({
         },
         stringCounter: state => {
             return state.counter + ' Click';
+        },
+        value: state => {
+            return state.value;
         }
     },
     mutations: {
-        increment: state => {
-            state.counter++;
+        increment: (state, payload) => {
+            state.counter += payload;
         },
-        decrement: state => {
-            state.counter--;
+        decrement: (state, payload) => {
+            state.counter -= payload;
+        },
+        updateValue: (state, payload) => {
+            state.value = payload;
         }
     },
     actions: {
-        increment: ({commit}) => {
+        increment: ({commit}, payload) => {
             console.log('increment');
-            commit('increment');
+            commit('increment', payload);
         },
-        decrement: ({commit}) => {
+        decrement: ({commit}, payload = 1) => {
             console.log('decrement');
-            commit('decrement');
+            commit('decrement', payload);
         },
-        asyncIncrement: ({commit}) => {
+        asyncIncrement: ({commit}, payload) => {
             setTimeout(() => {
-                commit('increment');
-            }, 1000);
+                commit('increment', payload.by);
+            }, payload.duration);
         },
-        asyncDecrement: ({commit}) => {
+        asyncDecrement: ({commit}, payload) => {
             setTimeout(() => {
-                commit('decrement');
-            }, 1000);
+                commit('decrement', payload.by);
+            }, payload.duration);
+        },
+        updateValue: ({commit}, payload) => {
+            commit('updateValue', payload)
         }
     }
 });
